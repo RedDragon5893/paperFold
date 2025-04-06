@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🚀 Paper Folding Adventure 🚀</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f0f8ff;
+            text-align: center;
+        }
+        #app {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #ff6b6b;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        input {
+            padding: 12px;
+            font-size: 18px;
+            width: 100px;
+            text-align: center;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            margin: 10px;
+        }
+        button {
+            background: linear-gradient(to right, #4CAF50, #2E8B57);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e9f7ef;
+            border-radius: 15px;
+            border-left: 5px solid #4CAF50;
+            text-align: left;
+        }
+        .emoji {
+            font-size: 28px;
+            margin: 0 5px;
+        }
+        .comparison {
+            font-weight: bold;
+            color: #2E8B57;
+        }
+        .warning {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1><span class="emoji">📜</span> Paper Folding Adventure <span class="emoji">🚀</span></h1>
+        <p>How many times should we fold the paper? (0-42)</p>
+        <p><em>Press Enter to exit</em></p>
+        
+        <input type="number" id="foldInput" placeholder="Folds">
+        <button onclick="foldPaper()">FOLD IT!</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const comparisons = [
+            { folds: 0, text: "A single sheet of paper <span class='emoji'>📄</span>" },
+            { folds: 1, text: "2 sheets stacked <span class='emoji'>📚</span>" },
+            { folds: 5, text: "Thickness of a smartphone <span class='emoji'>📱</span>" },
+            { folds: 7, text: "Width of a large marker <span class='emoji'>🖍️</span>" },
+            { folds: 10, text: "A Harry Potter hardcover <span class='emoji'>📖</span>" },
+            { folds: 14, text: "Average human height (5'4\") <span class='emoji'>🧍</span>" },
+            { folds: 18, text: "Length of a blue whale <span class='emoji'>🐋</span>" },
+            { folds: 23, text: "Burj Khalifa's height <span class='emoji'>🏙️</span>" },
+            { folds: 27, text: "Edge of space (Kármán line) <span class='emoji'>🛰️</span>" },
+            { folds: 36, text: "Earth's radius <span class='emoji'>🌍</span>" },
+            { folds: 42, text: "BEYOND THE MOON! <span class='emoji'>🌕🚀</span>" }
+        ];
+
+        function foldPaper() {
+            const input = document.getElementById('foldInput').value;
+            const resultDiv = document.getElementById('result');
+            
+            if (input.trim() === '') {
+                resultDiv.innerHTML = `<p class="emoji">✌️</p><p>Goodbye! Come fold again soon!</p>`;
+                document.getElementById('foldInput').disabled = true;
+                return;
+            }
+            
+            try {
+                const folds = parseInt(input);
+                
+                if (isNaN(folds)) {
+                    throw new Error("Not a number");
+                }
+                
+                if (folds < 0) {
+                    resultDiv.innerHTML = `<p class="emoji">❌</p><p class="warning">Negative folds? Are you trying to unfold the universe?</p>`;
+                } else if (folds > 42) {
+                    resultDiv.innerHTML = `<p class="emoji">💥</p><p class="warning">Whoa there, Einstein! Even paper can't handle that many folds!</p>
+                                          <p>At fold 43 your paper would reach <span class="comparison">the Sun</span> <span class="emoji">☀️</span></p>`;
+                } else {
+                    const thickness = calculateThickness(folds);
+                    let comparison = comparisons[0].text;
+                    
+                    // Find the best matching comparison
+                    for (let i = comparisons.length - 1; i >= 0; i--) {
+                        if (folds >= comparisons[i].folds) {
+                            comparison = comparisons[i].text;
+                            break;
+                        }
+                    }
+                    
+                    resultDiv.innerHTML = `
+                        <p>Folding paper <span class="comparison">${folds}</span> times...</p>
+                        <p>Final thickness: <span class="comparison">${thickness}</span></p>
+                        <p>That's about as thick as: ${comparison}</p>
+                        ${folds >= 36 ? '<p class="emoji">🤯 MIND BLOWN!</p>' : ''}
+                    `;
+                }
+            } catch (e) {
+                resultDiv.innerHTML = '<p class="emoji">📢</p><p class="warning">PSST! That\'s not a number! Try something like "7" or "42"</p>';
+            }
+        }
+        
+        function calculateThickness(folds) {
+            const initialThickness = 0.1; // mm
+            const thickness = initialThickness * Math.pow(2, folds);
+            
+            if (thickness < 1) {
+                return thickness.toFixed(2) + " mm";
+            } else if (thickness < 1000) {
+                return thickness.toFixed(0) + " mm (" + (thickness/10).toFixed(1) + " cm)";
+            } else if (thickness < 1000000) {
+                return (thickness/1000).toFixed(2) + " meters";
+            } else if (thickness < 1000000000) {
+                return (thickness/1000000).toFixed(2) + " km";
+            } else {
+                return (thickness/1000000000).toFixed(2) + " million km";
+            }
+        }
+        
+        // Handle Enter key
+        document.getElementById('foldInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                foldPaper();
+            }
+        });
+    </script>
+</body>
+</html>
